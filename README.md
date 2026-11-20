@@ -17,7 +17,7 @@ docker compose run --rm --build collector --start 2026-06-01   # first run: back
 | Variable | |
 |---|---|
 | `PLANETGPS_USER`, `PLANETGPS_PASSWORD` | Your PlanetGPS website login. I'd recommend creating a separate read-only user from your main account. |
-| `PLANETGPS_DEVICE_ID` | Tracker ID, which you will have to find out by inspecting the web tracker, not the same as the actual "device ID" associated with your GPS unit |
+| `PLANETGPS_DEVICE_ID` | Tracker ID, which is different from your actual device ID, and can be found in the URL from the web tracker. See below. |
 | `POSTGRES_PASSWORD` | Password for the database owner, `planetgps` |
 | `GRAFANA_RO_PASSWORD` | Password for `grafana_ro`, a read-only login for Grafana |
 | `PG_PORT` | Host port Postgres is published on (default `5432`) |
@@ -30,6 +30,12 @@ Then schedule the collector, for example every 15 minutes:
 ```
 
 The tracker only reports while the vehicle is moving, so a run that inserts nothing is normal.
+
+## Finding your Device ID
+
+The device ID used by the tracker is not the same as the one shown in your account. To find it, login to your account and go to [/Playback.aspx](https://web.planetgps.com/Playback.aspx), and copy the `deviceid` given in the querystring.
+
+![Screenshot showing where the deviceid is in the Playback.aspx URL](planetgps-device-id.png)
 
 ## Grafana
 
