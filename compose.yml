@@ -1,0 +1,32 @@
+services:
+  db:
+    image: postgres:17
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: planetgps
+      POSTGRES_USER: planetgps
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set in .env}
+      GRAFANA_RO_PASSWORD: ${GRAFANA_RO_PASSWORD:?set in .env}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./db:/docker-entrypoint-initdb.d:ro
+    ports:
+      - "${PG_PORT:-5432}:5432"   # for Grafana
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U planetgps -d planetgps"]
+      interval: 5s
+      retries: 10
+
+  # Not a daemon: cron runs `docker compose run --rm collector`
+  collector:
+    build: .
+    profiles: [collector]
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://planetgps:${POSTGRES_PASSWORD}@db:5432/planetgps
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pgdata:
