@@ -1,4 +1,4 @@
-# planetgps
+# PlanetGPS Geo Scraper
 
 Collects a vehicle's location history from [PlanetGPS](https://web.planetgps.com) into Postgres, for Grafana dashboards of distances, trips, routes and stops.
 
